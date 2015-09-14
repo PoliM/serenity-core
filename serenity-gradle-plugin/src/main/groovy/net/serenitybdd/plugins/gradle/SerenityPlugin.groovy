@@ -14,13 +14,12 @@ class SerenityPlugin implements Plugin<Project> {
 
         project.extensions.create("serenity", SerenityPluginExtension)
 
-        reportDirectory = prepareReportDirectory(project)
-
         project.task('aggregate') {
             group 'Serenity BDD'
             description 'Generates aggregated Serenity reports'
 
             doLast {
+                reportDirectory = prepareReportDirectory(project)
                 if (!project.serenity.projectKey) {
                     project.serenity.projectKey = project.name
                 }
@@ -41,6 +40,7 @@ class SerenityPlugin implements Plugin<Project> {
             group 'Serenity BDD'
             description "Checks the Serenity reports and fails the build if there are test failures (run automatically with 'check')"
 
+            reportDirectory = prepareReportDirectory(project)
             inputs.dir reportDirectory
 
             doLast {
@@ -56,6 +56,7 @@ class SerenityPlugin implements Plugin<Project> {
             description "Deletes the Serenity output directory (run automatically with 'clean')"
 
             doLast {
+                reportDirectory = prepareReportDirectory(project)
                 reportDirectory.deleteDir()
             }
         }
